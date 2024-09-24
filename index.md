@@ -2,6 +2,7 @@
 
 ## Demos
 - [Square Moving Around Screen](moving-square)
+- [Traffic Light](traffic-light)
 
 
 ## Projects
