@@ -10,7 +10,7 @@ let a = "white";
 let b = "white";
 let c = "white";
 let lastTimeSwitched = 0;
-let waitTime = 2000;
+const waitTime = 2000;
 function setup() {
   createCanvas(100, 300);
 }
@@ -42,20 +42,19 @@ function determine_colour() {
   if (millis() > lastTimeSwitched + waitTime + 800) {
     lastTimeSwitched = millis();
     a = "red";
-    b = "white";
+    b = "light yellow";
     c = "white";
   }
   else if ((millis() > lastTimeSwitched + waitTime + 500) && (millis() < lastTimeSwitched + waitTime + 700)) {
     
-    a = "white";
+    a = "light red";
     b = "yellow";
     c = "white";
-    console.log(1);
   }
   else if ((millis() > lastTimeSwitched + waitTime)  && (millis() < lastTimeSwitched + waitTime + 500)) {
     
-    a = "white";
-    b = "white";
-    c = "green";
+    a = "light red";
+    b = "light yellow";
+    c = "lime";
   }
 }
