@@ -13,7 +13,7 @@ let circleX = 340;
 let circleY = 220;
 const circleDiameter = 50;
 const keysWASD = [87, 65, 83, 68];
-let moveAmount = 5;
+let moveAmount = 50;
 
 function preload() {
   // Load the handPose model
@@ -30,6 +30,7 @@ function setup() {
   video.size(windowWidth, windowHeight);
   video.hide();
   
+  
   handPose.detectStart(video, gotHands);
 }
 
@@ -44,7 +45,8 @@ function draw() {
   
   drawcircle();
 
-  
+  drawObject(); 
+
   for (let i = 0; i < hands.length; i++) {
     let hand = hands[i];
     for (let j = 0; j < hand.keypoints.length; j++) {
@@ -66,24 +68,38 @@ function gotHands(results) {
   hands = results;
 }
 
+function drawObject () {
+  
+}
 
 function drawcircle() {
   fill("limegreen");
   circle(circleX, circleY, circleDiameter);
 
+  
   if (keyIsDown(keysWASD[0]) === true) {
-    circleY -= moveAmount;
+    if (circleY > circleDiameter/2) {
+      circleY -= moveAmount;
+    }
   }
 
   if (keyIsDown(keysWASD[1]) === true) {
-    circleX += moveAmount;
-}
+    if (circleX < windowWidth - circleDiameter/2) {
+      circleX += moveAmount;
+    }
+  }
 
   if (keyIsDown(keysWASD[2]) === true) {
-    circleY += moveAmount;
+    if (circleY < windowHeight - circleDiameter/2) {
+      circleY += moveAmount;
+    }
+    
   }
 
   if (keyIsDown(keysWASD[3]) === true) {
-    circleX -= moveAmount;
+    if (circleX > circleDiameter/2) {
+      circleX -= moveAmount;
+    }
+    
   }
 }
