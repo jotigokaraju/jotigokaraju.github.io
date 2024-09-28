@@ -6,71 +6,72 @@
  * This example demonstrates hand tracking on live video through ml5.handPose.
  */
 
-let handPose;
-let video;
-let hands = [];
 let circleX = 340;
 let circleY = 220;
 const circleDiameter = 50;
 const keysWASD = [87, 65, 83, 68];
 let moveAmount = 50;
 
-function preload() {
-  // Load the handPose model
-  handPose = ml5.handPose();
-}
-
+//variable for handpose ml model
+let handpose;
+//variable to store the video feed
+let video;
+//array for hand point predictions
+let predictions = [];
 
 function setup() {
-  //createCanvas(640, 480);
-  createCanvas(windowWidth, windowHeight);
-  
-  video = createCapture(VIDEO);
-  //video.size(640, 480);
-  video.size(windowWidth, windowHeight);
-  video.hide();
-  
-  
-  handPose.detectStart(video, gotHands);
+  // create the canvas
+ createCanvas(640, 480);
+  /* capture the video feed and set it to the width and height of the current canvas */
+ video = createCapture(VIDEO);
+ video.size(width, height);
+
+  /* print to let us know that handpose model (which is initialized on the next line) is loading */
+  print("loading")
+  // call modelReady() when it is loaded
+  handpose = ml5.handpose(video, modelReady);
+  // Hide the video element, and just show the canvas
+  video.hide();
+}
+// when the model is ready, a message appears in the console and it predicts where each landmark should be placed
+function modelReady() {
+  console.log("Model ready!");
+    handpose.on("predict", function(results) {
+    predictions = results;
+  });
+  handpose.predict(video);
 }
 
 function draw() {
+  // render the video feed
+  image(video, 0, 0, width, height);
+  // We can call a function to draw using the keypoints
+  drawObject();
+}
+// A function to draw a ball at the tip of the finger
+function drawObject() {
+  if (predictions.length > 0) {
+    let prediction = predictions[0];
+    let x = prediction.annotations.indexFinger[3][0]
+    let y = prediction.annotations.indexFinger[3][1]
+    print(prediction, x, y)
+    fill(51);
+    noStroke();
   
-  
-
-  translate(video.width, 0);
-  scale(-1, 1);
-  image(video, 0, 0, width, height);
-
-  
-  drawcircle();
-
-  drawObject(); 
-
-  for (let i = 0; i < hands.length; i++) {
-    let hand = hands[i];
-    for (let j = 0; j < hand.keypoints.length; j++) {
-      let keypoint = hand.keypoints[j];
-      fill(0, 255, 0);
-      noStroke();
-      circle(keypoint.x, keypoint.y, 10);
-      
+    // A small ellipse to track the finger
+    ellipse(round(x), round(y), 50, 50) 
+      
+    // If the finger point is in the left of the screen, draw the first rectangle; otherwise draw the second
+    if (x < (300)) {
+      rect(0, 0, 300, 480);  // Left
+    }
+    else {
+      rect(300, 0, 300, 480); // Right
     }
   }
-
-  
-
 }
 
-// Callback function for when handPose outputs data
-function gotHands(results) {
-  // save the output to the hands variable
-  hands = results;
-}
 
-function drawObject () {
-  
-}
 
 function drawcircle() {
   fill("limegreen");
