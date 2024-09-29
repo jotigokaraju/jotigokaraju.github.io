@@ -139,7 +139,8 @@ function draw() {
   // If there is at least one hand
   for (let i = 0; i < hands.length; i++) {
     // Find the index finger tip and thumb tip
-    let finger = hands[i].index_finger_tip;
+    let finger = hands[0].index_finger_tip;
+    console.log(i);
     
     
 
