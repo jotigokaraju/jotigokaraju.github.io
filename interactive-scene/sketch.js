@@ -8,13 +8,10 @@ let moveAmount = 50;
 let handPose;
 let video;
 let hands = [];
-let vidAspectRatio = video.width / video.height;
-let canAspectRatio = windowWidth / windowHeight;
-let VideoWidth;
-let VideoHeight;
+let vidAspectRatio;
 
-// A variable to track a pinch between thumb and index
-let pinch = 0;
+
+
 
 function preload() {
   // Load the handPose model
@@ -22,11 +19,10 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(640, 480);
+  createCanvas(windowWidth, windowHeight);
   video = createCapture(VIDEO);
   
 
-  video.size(640, 480);
   
   video.hide();
   // Start detecting hands from the webcam video
@@ -37,37 +33,39 @@ function draw() {
   // Draw the webcam video
 
   
-  translate(video.width, 0);
+  translate(width, 0);
   //then scale it by -1 in the x-axis
   //to flip the image
   scale(-1, 1);
   //draw video capture feed as image inside p5 canvas
-  image(video, 0, 0);
+  image(video, 0, 0, width, height);
+  //background(255);
+  
   
 
 
-  // If there is at least one hand
-  for (let i = 0; i < hands.length; i++) {
+  if (hands.length > 0) {
+    for (let i = 0; i < hands.length; i++) {
 
-    if (i === 0) {
-    
-      let finger = hands[0].index_finger_tip;
-      console.log(i);
-      fill(0, 255, 0, 200);
-      circle(finger.x, finger.y, 50);
-
-    }
-
-    else {
-      let hand = hands[i]
-      for (let j = 0; j < hand.keypoints.length; j++) {
-        let keypoint = hand.keypoints[j];
-        fill(0, 255, 0);
-        noStroke();
-        circle(keypoint.x, keypoint.y, 10);
+      if (i === 0) {
+        let finger = hands[0].index_finger_tip;
+        console.log(i);
+        fill(0, 255, 0, 200);
+        circle(finger.x, finger.y, 50);
       }
-    }
 
+      else {
+        let hand = hands[i]
+        for (let j = 0; j < hand.keypoints.length; j++) {
+          let keypoint = hand.keypoints[j];
+          fill(0, 255, 0);
+          noStroke();
+          circle(keypoint.x, keypoint.y, 10);
+          
+        }
+      }
+
+    }
   }
 }
 
