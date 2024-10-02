@@ -18,7 +18,7 @@ How to Play:
 */
 
 //Set up all Global Variables
-let circleX = 340;
+let circleX = 440;
 let circleY = 220;
 const circleDiameter = 100;
 const keysWASD = [87, 65, 83, 68];
