@@ -5,7 +5,11 @@
 - [Object Demo](object-demo)
 - [Traffic Light](traffic-light)
 - [Generative Art](art-demo)
+- [Using Images](image-demo)
+- [Perlin Noise Basic](perlin-noise)
+- [Perlin Noise Demo](perlin-background)
 
 ## Projects
 - [Interactive Scene Project](interactive-scene)
+- [Object Notation Assignment](object-notation-assignment)
 
