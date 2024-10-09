@@ -3,14 +3,15 @@
 
 let time = 0;
 let terrain = [];
-const NUMBER_OF_RECTS = 2000;
+let NUMBER_OF_RECTS = 2000;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  NUMBER_OF_RECTS = width;
   let widthOfRect = width/NUMBER_OF_RECTS;
   for (let i = 0; i < windowWidth; i+= widthOfRect) {
-    x = noise(time) * height;
-    terrain.push(spawnRectangle(i, x, i+widthOfRect));
+    x = noise(time) * height/1.1;
+    terrain.push(spawnRectangle(i, x, widthOfRect));
     time += 0.001;
   }
   
