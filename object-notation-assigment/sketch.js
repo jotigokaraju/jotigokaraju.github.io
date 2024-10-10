@@ -6,7 +6,13 @@ let video;
 let faces = [];
 let options = { maxFaces: 1, refineLandmarks: false, flipHorizontal: false };
 
+let presetConfiguration;
 
+function setIntialFaceShape() {
+  presetConfiguration = {
+    
+  }
+}
 function preload() {
 
   // Load the handPose model

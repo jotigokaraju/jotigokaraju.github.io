@@ -8,6 +8,7 @@
 - [Using Images](image-demo)
 - [Perlin Noise Basic](perlin-noise)
 - [Perlin Noise Demo](perlin-background)
+- [Bubbles Demo](bubble-demo)
 
 ## Projects
 - [Interactive Scene Project](interactive-scene)
