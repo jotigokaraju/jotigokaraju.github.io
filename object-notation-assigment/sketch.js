@@ -1,44 +1,25 @@
-// Smiley Bird
-// Joti Gokaraju
-
 let faceMesh;
-let video;
-let faces = [];
-let options = { maxFaces: 1, refineLandmarks: false, flipHorizontal: false };
-
-let presetConfiguration;
-
-function setIntialFaceShape() {
-  presetConfiguration = {
-    
-  }
-}
+let options = { maxFaces: 1, refineLandmarks: false, flipped: false };
 function preload() {
-
-  // Load the handPose model
-  handPose = ml5.handPose();
-
-  //Load the images
-  backgroundImg = loadImage('Background Scenic.jpg');
-  palmTrees = loadImage('palmtree.png');
-
   faceMesh = ml5.faceMesh(options);
 }
-
+let video;
 function setup() {
   createCanvas(640, 480);
-  // Create the webcam video and hide it
+  // Create the video and hide it
   video = createCapture(VIDEO);
   video.size(640, 480);
   video.hide();
-  // Start detecting faces from the webcam video
   faceMesh.detectStart(video, gotFaces);
 }
-
+let faces = [];
+// Callback function for when faceMesh outputs data
+function gotFaces(results) {
+  // Save the output to the faces variable
+  faces = results;
+}
 function draw() {
-  // Draw the webcam video
   image(video, 0, 0, width, height);
-
   // Draw all the tracked face points
   for (let i = 0; i < faces.length; i++) {
     let face = faces[i];
@@ -50,11 +31,3 @@ function draw() {
     }
   }
 }
-
-// Callback function for when faceMesh outputs data
-function gotFaces(results) {
-  // Save the output to the faces variable
-  faces = results;
-}
-
-
