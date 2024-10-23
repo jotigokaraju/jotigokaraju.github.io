@@ -60,7 +60,7 @@ function gotResult(results) {
 function keyPressed() {
 
   //Check if key is space bar
-  if (key == ' ') {
+  if (key === ' ') {
     bird.jump();
   }
 
@@ -87,7 +87,7 @@ function setup() {
 
   //Based on online tutorial, I learned the new structure
   bird = new Bird();
-  let pipe = new Pipe()
+  let pipe = new Pipe();
   pipes.push(pipe);
 
 }
@@ -126,10 +126,10 @@ function playGame() {
 
   //I asked ChatGPT because I didn't know why the pipes were spaced irregularly, I tried this.
   //It is a bit better but is still a bit random
-  if (frameCount % pipeSpacing == 0) {
+  if (frameCount % pipeSpacing === 0) {
 
     //Create new pipes every set time interval
-    let pipe = new Pipe()
+    let pipe = new Pipe();
     pipes.push(pipe);
 
   }
