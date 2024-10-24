@@ -24,9 +24,9 @@ function keyPressed() {
 }
 
 function draw() {
-  windowResized();
   background(220);
   displayGrid();
+  //checkVictory();
   
 }
 
@@ -53,23 +53,24 @@ function generateRandomGrid(columns, rows) {
   for (let y = 0; y < rows; y++) {
     newGrid.push([]);
     for (let x = 0; x < columns; x++) {
-      newGrid[y].push(Math.round(Math.random(0, 1)))
+      newGrid[y].push(Math.round(Math.random(0, 1)));
     }
   }
   return newGrid;
 }
 
 function mousePressed() {
-  for (let y = 0; y < grid.length; y++) {
-    for (x = 0; x < grid.length; x++) {
-      if ((mouseX >= (x)*cellSize && mouseX <= (x+1)*cellSize) && (mouseY >= (y)*cellSize && mouseY <= (y+1)*cellSize)) {
-        if (grid[y][x] === 0) {
-          grid[y][x] = 1;
-        } else {
-          grid[y][x] = 0;
-        }
-        
-      }
-    }
+  let a;
+  let y = Math.floor(mouseY/cellSize)
+  let x = Math.floor(mouseX/cellSize)
+  if (grid[y][x] === 0) {
+    a = 1;
+  } else {
+    a = 0;
   }
+  grid[y][x] = a;
+  grid[y+1][x] = a;
+  grid[y-1][x] = a;
+  grid[y][x+1] = a;
+  grid[y][x-1] = a;
 }

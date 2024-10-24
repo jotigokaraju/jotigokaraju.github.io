@@ -8,7 +8,7 @@ Object Notation Assignment
 Extras for Experts: ML5.JS; Classes
 
 Flappy Bird with Voice (Saying "Up") and Keyboard Control with Space Bar
-
+Please use this with a computer that has a reasonably good quality mic. 
 */
 
 
