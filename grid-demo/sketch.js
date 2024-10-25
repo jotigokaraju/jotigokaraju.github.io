@@ -9,36 +9,35 @@ let grid;
 let cellSize;
 
 function setup() {
-  grid = generateRandomGrid(10, 10);
+  grid = generateRandomGrid(6, 6);
   createCanvas(windowWidth, windowHeight);
 }
 
 function keyPressed() {
   if (key === 'r') {
-    grid = generateRandomGrid(10, 10);
+    grid = generateRandomGrid(4, 4);
   }
 
   if (key === 'e') {
-    grid = grid.fill(0);
+    playGame(grid);
   }
 }
 
 function draw() {
   background(220);
   displayGrid();
-  //checkVictory();
-  
+    
 }
 
 function displayGrid() {
-  for (let i = 0; i < grid.length; i++) {
-    for (x = 0; x < grid.length; x++) {
-      if (grid[i][x] === 1) {
-        fill("purple");
+  for (let a = 0; a < grid.length; a++) {
+    for (let b = 0; b < grid.length; b++) {
+      if (grid[a][b] === 1) {
+        fill("black");
       } else {
-        fill("blue");
+        fill("white");
       }
-      square(x*cellSize, i*cellSize, cellSize);
+      square(a*cellSize, b*cellSize, cellSize);
     }
   }
 }
@@ -61,16 +60,67 @@ function generateRandomGrid(columns, rows) {
 
 function mousePressed() {
   let a;
-  let y = Math.floor(mouseY/cellSize)
-  let x = Math.floor(mouseX/cellSize)
+  let y = Math.floor(mouseY/cellSize);
+  let x = Math.floor(mouseX/cellSize);
   if (grid[y][x] === 0) {
     a = 1;
   } else {
     a = 0;
   }
+
   grid[y][x] = a;
-  grid[y+1][x] = a;
-  grid[y-1][x] = a;
-  grid[y][x+1] = a;
-  grid[y][x-1] = a;
 }
+
+function toggle(x, y, a) {
+  if (x >= 0 && x <= grid.length && y >= 0 && y <= grid.length) {
+    grid[y][x] = a;
+  }
+}
+
+function playGame(grid) {
+
+  for (let y = 0; y < grid.length; y++) {
+    for (let x = 0; x < grid.length; x++) {
+      checkConditions(grid, y, x);
+    }
+  }
+}
+
+function checkVictory() {
+  return false;
+}
+
+function checkConditions(grid, y, x) {
+
+  //Count number of live cells around
+  let counter = 0;
+  for (let yCheck = -1; yCheck <= 1; yCheck++) {
+    for (let xCheck = -1; xCheck <= 1; xCheck++) {
+      if (x+xCheck >= 0 && x+xCheck <= grid.length && y+yCheck >= 0 && y+yCheck <= grid.length) {
+        if (grid[y+yCheck][x+xCheck] === 1) {
+          counter++;
+        }
+      }
+    }
+  }
+  counter -= grid[y][x];
+
+  //Condition 1
+  if (counter < 2) {
+    gird[y][x] = 0;
+  }
+
+  else if (counter > 3) {
+    grid[y][x] = 0;
+  }
+
+  else if (grid[y][x] === 0 && counter === 3) {
+    grid[y][x] = 1;
+  }
+
+  else if (grid[y][x] === 1 && (counter === 3 || counter === 2)) {
+    grid[y][x] = 1; 
+  }
+  
+}
+
