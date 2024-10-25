@@ -149,11 +149,13 @@ function displayGrid() {
   for (let y = 0; y < GRID_SIZE; y++) {
     for (let x = 0; x < GRID_SIZE; x++) {
       if (grid[y][x] === 1) {
-        fill("black");
+        fill(Math.round(random(255)), Math.round(random(255)), Math.round(random(255)));
       }
       else if (grid[y][x] === 0) {
         fill("white");
       }
+      fill(Math.round(random(255)), Math.round(random(255)), Math.round(random(255)));
+      
       noStroke();
       circle(x * cellSize, y * cellSize, cellSize);
     }
