@@ -10,17 +10,17 @@
 
 let grid;
 let cellWidth;
-const GRID_SIZE = 20;
+const GRID_SIZE = 35;
 let cellHeight;
 let blaster;
-
+let colours = [[83, 234, 234], [235, 83, 83], [128, 83, 235], [235, 235, 83]];
 function preload() {
   blaster = loadImage('blaster.png');
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  cellHeight = Math.floor(height/GRID_SIZE);
+  cellHeight = Math.floor((height/GRID_SIZE/2));
   cellWidth = Math.floor(width/GRID_SIZE);
   grid = generateRandomGrid(cellHeight, cellWidth);
   angleMode(DEGREES);
@@ -28,23 +28,21 @@ function setup() {
 
 function draw() {
   background(255, 255, 255);
-  displayBlaster();
   displayGrid();
 }
 
 
-function displayBlaster() {
-  
-}
+
 
 
 
 function displayGrid() {
   for (let y = 0; y < cellHeight; y++) {
     for (let x = 0; x < cellWidth; x++) {
-      fill("white"); 
-      noStroke();
-      circle(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE);
+      if (grid[y][x].active) {
+        fill(grid[y][x].colour[0], grid[y][x].colour[1], grid[y][x].colour[2]);
+        circle(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE);
+      }
     }
   }
 }
@@ -54,11 +52,7 @@ function generateRandomGrid(cols, rows) {
   for (let y = 0; y < cols; y++) {
     newGrid.push([]);
     for (let x = 0; x < rows; x++) {
-      if (random(100) < 50) {
-        newGrid[y].push(1);
-      } else {
-        newGrid[y].push(0);
-      }
+      newGrid[y].push({active:true, colour:colours[Math.floor(Math.random()*colours.length)]})
     }
   }
   return newGrid;  
