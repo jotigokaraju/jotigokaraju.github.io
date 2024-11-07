@@ -10,37 +10,47 @@ const GRID_SIZE = 35;
 let cellHeight;
 let blaster;
 const INDENT_BUBBLES = 20;
-const SPACING_BETWEEN_BUBBLES = 1.1;
+const SPACING_BETWEEN_BUBBLES = 0.1;
 let colours;
 let orangeBubble;
 let purpleBubble;
 let blueBubble;
 let greenBubble;
 let redBubble;
+let cannonX;
+let cannonY;
+let cannonWidth;
+let cannonHeight; 
+let cannon;
+let rotationAngle;
 
 function preload() {
   blaster = loadImage('blaster.png');
-  orangeBubble = loadImage('orangebubble.png');
   purpleBubble = loadImage('purplebubble.png');
   redBubble = loadImage('redbubble.png');
   greenBubble = loadImage('greenbubble.png');
   blueBubble = loadImage('bluebubble.png');
+  cannon = loadImage('cannon.png');
 }
 
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   cellHeight = Math.floor(windowHeight/GRID_SIZE/1.1/2.5);
-  cellWidth = Math.floor((windowWidth-20)/GRID_SIZE/1.1);
-  colours = [orangeBubble, purpleBubble, redBubble, greenBubble, blueBubble];
+  cellWidth = Math.floor((windowWidth-40)/((1+SPACING_BETWEEN_BUBBLES)*35));
+  colours = [purpleBubble, redBubble, greenBubble, blueBubble];
   grid = generateRandomGrid(cellHeight, cellWidth);
-  angleMode(DEGREES);
-  
+  angleMode(DEGREES);  
+  cannonHeight = 0.3*windowHeight;
+  cannonY = 0.8*windowHeight; 
+  cannonWidth = 0.8*cannonHeight; 
+  cannonX = windowWidth/2 - 0.5*cannonWidth; 
 }
 
 function draw() {
-  background(255, 255, 255);
+  background(47, 70, 237);
   displayGrid();
+  displayCannon();
 }
 
 
@@ -66,10 +76,10 @@ function generateRandomGrid(cols, rows) {
     for (let x = 0; x < rows; x++) {
       yStart = (y+1)*1.1*GRID_SIZE;
       if (y%2 === 0) {
-        xStart = GRID_SIZE*1.1*(x+1);
+        xStart = GRID_SIZE*(1+SPACING_BETWEEN_BUBBLES)*(x)+INDENT_BUBBLES;
       }
       else {
-        xStart = GRID_SIZE*1.1*(x+1)+20;
+        xStart = GRID_SIZE*(1+SPACING_BETWEEN_BUBBLES)*(x)+2*INDENT_BUBBLES;
       }
       newGrid[y].push({active:true, 
         colour:colours[Math.floor(Math.random() * colours.length)],
@@ -79,4 +89,12 @@ function generateRandomGrid(cols, rows) {
     }
   }
   return newGrid;  
+}
+
+function displayCannon() {
+  
+  push();
+  rotate(2);
+  image(cannon, cannonX, cannonY, cannonWidth, cannonHeight);
+  pop();
 }
