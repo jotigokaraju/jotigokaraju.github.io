@@ -23,6 +23,7 @@ let cannonWidth;
 let cannonHeight; 
 let cannon;
 let rotationAngle;
+let fireCannon;
 
 function preload() {
   blaster = loadImage('blaster.png');
@@ -31,6 +32,7 @@ function preload() {
   greenBubble = loadImage('greenbubble.png');
   blueBubble = loadImage('bluebubble.png');
   cannon = loadImage('cannon.png');
+  
 }
 
 
@@ -43,14 +45,17 @@ function setup() {
   angleMode(DEGREES);  
   cannonHeight = 0.3*windowHeight;
   cannonY = 0.8*windowHeight; 
-  cannonWidth = 0.8*cannonHeight; 
+  cannonWidth = 0.2*windowWidth; 
   cannonX = windowWidth/2 - 0.5*cannonWidth; 
+  fireCannon = new Cannon(cannonHeight, cannonWidth, cannonX, cannonY);
 }
 
 function draw() {
   background(47, 70, 237);
   displayGrid();
-  displayCannon();
+  fireCannon.move();
+  fireCannon.show();
+  console.log(windowWidth);
 }
 
 
@@ -91,10 +96,34 @@ function generateRandomGrid(cols, rows) {
   return newGrid;  
 }
 
-function displayCannon() {
-  
-  push();
-  rotate(2);
-  image(cannon, cannonX, cannonY, cannonWidth, cannonHeight);
-  pop();
+
+class Cannon {
+  constructor(cannonHeight, cannonWidth, cannonX, cannonY) {
+    this.height = cannonHeight;
+    this.width = cannonWidth;
+    this.x = cannonX;
+    this.y = cannonY;
+    this.direction = 5;
+  }
+
+  move() {
+    if (this.x > windowWidth-cannonWidth/2) {
+      this.direction = this.direction*-1;
+    }
+    if (this.x < 0-cannonWidth/4) {
+      this.direction = this.direction*-1;
+    }
+
+    this.x += this.direction;
+  }
+
+  show() {
+    image(cannon, this.x, this. y, this.height, this.width);
+  }
+}
+
+class FiringBall extends Cannon {
+  constructor() {
+    
+  }
 }
