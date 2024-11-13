@@ -24,6 +24,7 @@ let cannonHeight;
 let cannon;
 let rotationAngle;
 let fireCannon;
+let ballFired;
 
 function preload() {
   blaster = loadImage('blaster.png');
@@ -48,14 +49,16 @@ function setup() {
   cannonWidth = 0.2*windowWidth; 
   cannonX = windowWidth/2 - 0.5*cannonWidth; 
   fireCannon = new Cannon(cannonHeight, cannonWidth, cannonX, cannonY);
+  ballFired = new FiringBall();
 }
 
 function draw() {
   background(47, 70, 237);
   displayGrid();
   fireCannon.move();
-  fireCannon.show();
+  fireCannon.show(cannon);
   console.log(windowWidth);
+  ballFired.fire("blue");
 }
 
 
@@ -117,8 +120,9 @@ class Cannon {
     this.x += this.direction;
   }
 
-  show() {
-    image(cannon, this.x, this. y, this.height, this.width);
+  show(images) {
+    this.image = images;
+    image(this.image, this.x, this. y, this.height, this.width);
   }
 }
 
@@ -126,4 +130,10 @@ class FiringBall extends Cannon {
   constructor() {
     
   }
+
+  super.show(blueBubble);
+    //console.log(this.inertia);
+  //}
+
+
 }
