@@ -350,12 +350,14 @@ class FiringBall {
           }
           
           // Calculate the x position for the new ball based on row offset depending on even or odd position
+          let newXPosition;
+
           if (insertRow % 2 === 0) {
-            let newXPosition = GRID_SIZE * (1 + SPACING_BETWEEN_BUBBLES) * cell + INDENT_BUBBLES;
+            newXPosition = GRID_SIZE * (1 + SPACING_BETWEEN_BUBBLES) * cell + INDENT_BUBBLES;
           } 
           
           else {
-            let newXPosition = GRID_SIZE * (1 + SPACING_BETWEEN_BUBBLES) * cell + 2 * INDENT_BUBBLES;
+            newXPosition = GRID_SIZE * (1 + SPACING_BETWEEN_BUBBLES) * cell + 2 * INDENT_BUBBLES;
           }
 
           // Calculate the y position for the new ball
@@ -420,8 +422,11 @@ class FiringBall {
     let visited = [];
     let visiting = [[row, cell]];
   
-    // Only check neighbours to the left, right, up, down,upper-right, and lower-right because of how the balls look because of the offset
-    const directions = [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, 1], [1, 1]];
+    // When the row is Offset, only check neighbours to the left, right, up, down,upper-right, and lower-right
+    const directionsOffset = [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, 1], [1, 1]];
+
+    // When the row is Offset, only check neighbours to the left, right, up, down,upper-left, and lower-left
+    const directionsStandard = [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [1, -1]]
     
     // Store coordinates of balls that need to be popped
     let connected = [];
@@ -442,8 +447,17 @@ class FiringBall {
       if (grid[currentRow][currentCell].active && grid[currentRow][currentCell].colour === this.colour) {
         connected.push([currentRow, currentCell]);
   
+        // Check if we are on an offset row or not and change the directions we use
+        let directionsList;
+        if (currentRow%2 === 0) {
+          directionsList = directionsStandard;
+        }
+        else {
+          directionsList = directionsOffset;
+        }
+
         // Check all directions
-        for (let [vertical, horizontal] of directions) {
+        for (let [vertical, horizontal] of directionsList) {
 
           let verticalLocation = currentRow + vertical;
           let horizontalLocation = currentCell + horizontal;
@@ -551,19 +565,22 @@ function collisionCheck() {
   ringFinger = hands[0].ring_finger_tip;
   distanceThumbPinky = dist(thumb.x, thumb.y, ringFinger.x, ringFinger.y);
 
-  //If the fist is closed
+  // If the fist is closed
   if (distanceThumbPinky < threshold) {
     
     // Play cannon firing sound
     console.log("Collision");
 
-    //Play a gunshot sound
-    boomSound.play()
-
     // Fire the cannon
     ballFired = new FiringBall(fireCannon.x + (cannonWidth / 2) - GRID_SIZE/2, fireCannon.y, random(colours));
     bubbleFired = true;
 
+    if (distanceThumbPinky > threshold*2) {
+
+      //Play a gunshot sound
+      boomSound.play()
+
+    }
   }
 }
 
