@@ -38,7 +38,8 @@ let bubbleFired = false;
 let boomSound, popSound;
 let imgX, imgY;
 let startImg, finalImg;
-let gameOn = "start"
+let gameOn = "start";
+let presetColour;
 
 // Variables from Interactive Scene Assignment
 let handPose;
@@ -76,7 +77,7 @@ function setup() {
 
   // Set-up sound effects
   boomSound = createAudio('cannon_sound_effect.mp3');
-  popSound = createAudio('bubble_pop.mp3')
+  popSound = createAudio('bubble_pop.mp3');
 
   createCanvas(windowWidth, windowHeight);
 
@@ -100,10 +101,11 @@ function setup() {
   cannonHeight = 0.3 * height;
   cannonY = 0.8 * windowHeight; 
   cannonWidth = 0.3 * height; 
-  cannonX = width / 2 - (0.5 * cannonWidth); 
+  cannonX = width / 2 - 0.5*cannonWidth; 
 
   colours = [purpleBubble, redBubble, greenBubble, blueBubble];
-  
+  presetColour = random(colours);
+
   // Set-up Cannon
   fireCannon = new Cannon(cannonHeight, cannonWidth, cannonX, cannonY);
   
@@ -129,7 +131,7 @@ function draw() {
   
   //End the game if gameOn is false
   else if (gameOn === "false") {
-    endScreen()
+    endScreen();
   }
 }
 
@@ -138,6 +140,9 @@ function gameLogic() {
   
   // Detect the hands
   drawhands();
+
+  // Draw the bubble the space bar will fire
+  drawPresetBubble();
 
   // Show the constants (grid and cannon)
   displayGrid();
@@ -156,7 +161,7 @@ function gameLogic() {
 
     // Once the cannon ball is dead, use a callback function to kill it
     else {
-      boomSound.onended(changeBubbleFired)
+      boomSound.onended(changeBubbleFired);
     }
     
   }
@@ -171,6 +176,17 @@ function gameLogic() {
 // Callback function for cannonball
 function changeBubbleFired() {
   bubbleFired = false;
+  presetColour = random(colours);
+}
+
+// Display the bubble about to be fired by space
+function drawPresetBubble() {
+
+  fill('white');
+  textSize(20);
+  text('Bubble to be fired:', width/4-5*GRID_SIZE, height*0.75+GRID_SIZE/1.5);
+  image(presetColour, width/4, height*0.75, GRID_SIZE, GRID_SIZE);
+
 }
 
 // Callback function for when handPose outputs data (from ml5.js reference)
@@ -222,7 +238,8 @@ function generateRandomGrid(cols, rows) {
       // Depending on the row, set the offset so the array looks indented and set spacing between bubbles
       if (y % 2 === 0) {
         xStart = GRID_SIZE * (1 + SPACING_BETWEEN_BUBBLES) * x + INDENT_BUBBLES;
-      } else {
+      } 
+      else {
         xStart = GRID_SIZE * (1 + SPACING_BETWEEN_BUBBLES) * x + 2 * INDENT_BUBBLES;
       }
 
@@ -353,9 +370,9 @@ class FiringBall {
           let newXPosition;
 
           if (insertRow % 2 === 0) {
-            newXPosition = GRID_SIZE * (1 + SPACING_BETWEEN_BUBBLES) * cell + INDENT_BUBBLES;
+            let newXPosition = GRID_SIZE * (1 + SPACING_BETWEEN_BUBBLES) * cell + INDENT_BUBBLES;
           } 
-          
+
           else {
             newXPosition = GRID_SIZE * (1 + SPACING_BETWEEN_BUBBLES) * cell + 2 * INDENT_BUBBLES;
           }
@@ -422,11 +439,11 @@ class FiringBall {
     let visited = [];
     let visiting = [[row, cell]];
   
-    // When the row is Offset, only check neighbours to the left, right, up, down,upper-right, and lower-right
+    // Only check neighbours to the left, right, up, down, upper-right, and lower-right for offset rows
     const directionsOffset = [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, 1], [1, 1]];
 
-    // When the row is Offset, only check neighbours to the left, right, up, down,upper-left, and lower-left
-    const directionsStandard = [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [1, -1]]
+    // Only check neighbours to the left, right, up, down, upper-left, and lower-left for standard rows
+    const directionsStandard = [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [1, -1]];
     
     // Store coordinates of balls that need to be popped
     let connected = [];
@@ -438,8 +455,10 @@ class FiringBall {
       let [currentRow, currentCell] = visiting.pop();
   
       // ChatGPT gave me this line when I asked for help with debugging
-      if (visited.some(([r, c]) => r === currentRow && c === currentCell)) continue;
-  
+      if (visited.some(([r, c]) => r === currentRow && c === currentCell)) {
+        continue;
+      }
+
       // Mark this cell as visited
       visited.push([currentRow, currentCell]);
   
@@ -449,9 +468,11 @@ class FiringBall {
   
         // Check if we are on an offset row or not and change the directions we use
         let directionsList;
+
         if (currentRow%2 === 0) {
           directionsList = directionsStandard;
         }
+
         else {
           directionsList = directionsOffset;
         }
@@ -517,8 +538,8 @@ function keyPressed() {
   if (key === ' ' && !bubbleFired) {
 
     // Fire a new ball from the cannon position
-    boomSound.play()
-    ballFired = new FiringBall(fireCannon.x + cannonWidth / 2, fireCannon.y, random(colours));
+    boomSound.play();
+    ballFired = new FiringBall(fireCannon.x + cannonWidth / 2, fireCannon.y, presetColour);
     bubbleFired = true;
 
   }
@@ -533,28 +554,29 @@ function keyPressed() {
 function drawhands() {
   
   if (hands.length > 0) {
-  // Only consider the first hand it detects for the trigger
-  let hand = hands[0];
 
-  //Iterate through the different keypoints on the hand
-  for (let j = 0; j < hand.keypoints.length; j++) {
-          
-    let keypoint = hand.keypoints[j];
+    // Only consider the first hand it detects for the trigger
+    let hand = hands[0];
 
-    //These lines were pulled from someone else's code online
-    fistX = windowWidth - keypoint.x;
-    fistY = keypoint.y;
+    //Iterate through the different keypoints on the hand
+    for (let j = 0; j < hand.keypoints.length; j++) {
+            
+      let keypoint = hand.keypoints[j];
 
-    //Display the keypoints
-    fill(0, 255, 0);
-    noStroke();
-    circle(fistX, fistY, 10);
-          
-    //Call the collisionCheck() function to check if the trigger has been engaged
-    collisionCheck();
+      //These lines were pulled from someone else's code online
+      fistX = windowWidth - keypoint.x;
+      fistY = keypoint.y;
 
+      //Display the keypoints
+      fill(0, 255, 0);
+      noStroke();
+      circle(fistX, fistY, 10);
+            
+      //Call the collisionCheck() function to check if the trigger has been engaged
+      collisionCheck();
+    
+    }
   }
-}
 }
 
 //Function to handle the firing mechanism for the gun
@@ -565,22 +587,19 @@ function collisionCheck() {
   ringFinger = hands[0].ring_finger_tip;
   distanceThumbPinky = dist(thumb.x, thumb.y, ringFinger.x, ringFinger.y);
 
-  // If the fist is closed
+  //If the fist is closed
   if (distanceThumbPinky < threshold) {
     
     // Play cannon firing sound
     console.log("Collision");
 
+    //Play a gunshot sound
+    boomSound.play();
+
     // Fire the cannon
-    ballFired = new FiringBall(fireCannon.x + (cannonWidth / 2) - GRID_SIZE/2, fireCannon.y, random(colours));
+    ballFired = new FiringBall(fireCannon.x + cannonWidth / 2 - GRID_SIZE/2, fireCannon.y, random(colours));
     bubbleFired = true;
 
-    if (distanceThumbPinky > threshold*2) {
-
-      //Play a gunshot sound
-      boomSound.play()
-
-    }
   }
 }
 

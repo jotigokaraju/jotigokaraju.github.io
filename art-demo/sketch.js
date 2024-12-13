@@ -9,24 +9,23 @@ let colour1;
 let colour2;
 let colour3;
 
+colour1 = random(255);
+colour2 = random(255);
+colour3 = random(255);
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  
-
-  
-
-}
-
-function draw() {
   tileArray = [];
   for (let x = 0; x < width; x += TILE_SIZE) {
     for (let y = 0; y < height; y += TILE_SIZE) {
       tileArray.push(spawnTile(x, y));
     }
+}
+
+function draw() {
+  
   }
-  colour1 = random(255);
-  colour2 = random(255);
-  colour3 = random(255);
+  
   background(colour1, colour2, colour3);
   
   for (let instance of tileArray) {
